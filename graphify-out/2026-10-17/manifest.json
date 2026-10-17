@@ -42,10 +42,10 @@
     "semantic_hash": "215b92d62f2f42a58788d0a31a075e2d"
   },
   "lib/repo.ts": {
-    "mtime": 1792217995.480417,
-    "seen": 1792218754.2032056,
-    "ast_hash": "c4d5a7022475514c5d2ca6812fdb7ca4",
-    "semantic_hash": "c4d5a7022475514c5d2ca6812fdb7ca4"
+    "mtime": 1792218780.7996404,
+    "seen": 1792218796.1629286,
+    "ast_hash": "b36894968cad97f268511be837cbdd7f",
+    "semantic_hash": ""
   },
   "package.json": {
     "mtime": 1792217880.590567,
@@ -58,5 +58,29 @@
     "seen": 1792218754.2032056,
     "ast_hash": "2059b9680eb3f175d5378717459b165c",
     "semantic_hash": "2059b9680eb3f175d5378717459b165c"
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1792218722.5817869,
+    "seen": 1792218796.1629286,
+    "ast_hash": "9b31786b637be3c13978bec4c2330752",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1792218722.5919664,
+    "seen": 1792218796.1629286,
+    "ast_hash": "67d88e9d0760c3ba54c75dfd9551c1c5",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792217995.4824176,
+    "seen": 1792218796.1629286,
+    "ast_hash": "83bc87da3ca8ed1461f5357bf8d1da94",
+    "semantic_hash": ""
+  },
+  "plan.md": {
+    "mtime": 1792217995.483417,
+    "seen": 1792218796.1629286,
+    "ast_hash": "ba6221760635bea50aa4ec0b077de4dd",
+    "semantic_hash": ""
   }
 }
