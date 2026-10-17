@@ -236,3 +236,4 @@ iframe { width: 100%; height: min(70vh, 680px); border: 1px solid var(--border);
 .skeleton span:last-child { width: 60%; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 .ask { display: flex; gap: 8px; }
+.ws-single { grid-template-columns: minmax(0, 860px); justify-content: center; }

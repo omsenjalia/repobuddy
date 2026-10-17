@@ -48,12 +48,16 @@ export default function Home() {
             Paste a repo. RepoBuddy maps it into a code knowledge graph, then answers your questions with real file paths.
           </p>
           <RepoForm />
-          <p className="examples">
-            Try{" "}
-            {EXAMPLES.map((r) => (
-              <Link key={r} href={`/app?url=${encodeURIComponent(`https://github.com/${r}`)}`}>{r}</Link>
-            ))}
-          </p>
+          {process.env.NEXT_PUBLIC_BACKEND === "server" ? (
+            <p className="examples">
+              Try{" "}
+              {EXAMPLES.map((r) => (
+                <Link key={r} href={`/app?url=${encodeURIComponent(`https://github.com/${r}`)}`}>{r}</Link>
+              ))}
+            </p>
+          ) : (
+            <p className="examples">Beta: <Link href="/app">see which repos RepoBuddy knows so far</Link></p>
+          )}
 
           <div className="term hero-term" aria-label="Example session">
             <div className="term-bar">

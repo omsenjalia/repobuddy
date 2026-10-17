@@ -8,3 +8,5 @@ graphify-out/cache/
 out/
 __pycache__/
 .pytest_cache/
+.dev.vars
+.wrangler/

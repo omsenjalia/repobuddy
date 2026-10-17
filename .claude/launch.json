@@ -1,12 +1,47 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 },
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
     {
       "name": "api",
       "runtimeExecutable": ".venv/Scripts/python",
-      "runtimeArgs": ["-m", "uvicorn", "main:app", "--app-dir", "server", "--port", "8000", "--env-file", ".env.local"],
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--app-dir",
+        "server",
+        "--port",
+        "8000",
+        "--env-file",
+        ".env.local"
+      ],
       "port": 8000
+    },
+    {
+      "name": "pages",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "wrangler",
+        "pages",
+        "dev",
+        "out",
+        "--kv",
+        "GRAPHIFY_KV",
+        "--port",
+        "8788",
+        "--compatibility-date",
+        "2026-09-01"
+      ],
+      "port": 8788
     }
   ]
 }
