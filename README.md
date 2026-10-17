@@ -43,11 +43,11 @@ Open http://localhost:3000. Tests: `cd server && python test_main.py`.
 **What goes where:** Render runs only `server/` (the API). Cloudflare Pages builds the repo root into static files (`out/`); its `functions/` folder deploys too but is unused in server mode.
 
 **1. API on Render**
-1. Render dashboard → **New → Blueprint** → connect this GitHub repo. It reads `render.yaml`: a **Starter** web service (no sleep) built from `server/Dockerfile`, with a 5 GB disk at `/data` so clones survive restarts and deploys.
+1. Render dashboard → **New → Blueprint** → connect this GitHub repo. It reads `render.yaml`: a **free** web service built from `server/Dockerfile`.
 2. Enter the secrets it asks for: `GEMINI_API_KEY`, `OLLAMA_API_KEY`, and `ALLOWED_ORIGINS` (e.g. `https://repobuddy.pages.dev`; comma-separate several, add your custom domain later).
 3. When it's live, open `https://<service>.onrender.com/health`; it should return `{"ok":true}`.
 
-Cost: Starter instance plus the disk, billed monthly; check Render's pricing page for current rates. Starter has 512 MB RAM, so very large repos may fail to map. Switch `plan` to `standard` in `render.yaml` for more memory, or `free` to pay nothing (it sleeps after 15 minutes and loses clones; remove the `disk` block for free).
+The free plan sleeps after 15 minutes idle (the first request then takes 30-60s), wipes cloned repos on sleep (the site re-maps automatically) and has 512 MB RAM, so very large repos may fail to map. With billing or credits active, follow the comments in `render.yaml`: switch `plan` to `starter` and uncomment the disk and `WORK_DIR`, so the service stays awake and keeps its clones.
 
 **2. Website on Cloudflare Pages**
 1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → this repo.

@@ -3,8 +3,10 @@ services:
   - type: web
     name: repobuddy-api
     runtime: docker
-    # Starter never sleeps and allows a disk; the free plan works too but sleeps and loses clones.
-    plan: starter
+    # Free: sleeps after 15 min idle and loses clones on sleep (the site re-maps automatically).
+    # Once billing or credits are active, switch to `starter` and uncomment the disk and WORK_DIR below
+    # so the service stays awake and clones survive restarts.
+    plan: free
     rootDir: server
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
@@ -12,13 +14,13 @@ services:
     buildFilter:
       paths:
         - server/**
-    disk:
-      name: repos
-      mountPath: /data
-      sizeGB: 5
+    # disk:
+    #   name: repos
+    #   mountPath: /data
+    #   sizeGB: 5
     envVars:
-      - key: WORK_DIR
-        value: /data
+      # - key: WORK_DIR
+      #   value: /data
       - key: GEMINI_API_KEY
         sync: false
       - key: OLLAMA_API_KEY
