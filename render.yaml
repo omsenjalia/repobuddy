@@ -25,5 +25,3 @@ services:
         sync: false
       - key: OLLAMA_API_KEY
         sync: false
-      - key: ALLOWED_ORIGINS
-        sync: false

@@ -44,7 +44,7 @@ Open http://localhost:3000. Tests: `cd server && python test_main.py`.
 
 **1. API on Render**
 1. Render dashboard → **New → Blueprint** → connect this GitHub repo. It reads `render.yaml`: a **free** web service built from `server/Dockerfile`.
-2. Enter the secrets it asks for: `GEMINI_API_KEY`, `OLLAMA_API_KEY`, and `ALLOWED_ORIGINS` (e.g. `https://repobuddy.pages.dev`; comma-separate several, add your custom domain later).
+2. Enter the secrets it asks for: `OLLAMA_API_KEY` (and `GEMINI_API_KEY` if you set `LLM_PROVIDER=gemini`). The API accepts requests from any website, so no origin setting is needed.
 3. When it's live, open `https://<service>.onrender.com/health`; it should return `{"ok":true}`.
 
 The free plan sleeps after 15 minutes idle (the first request then takes 30-60s), wipes cloned repos on sleep (the site re-maps automatically) and has 512 MB RAM, so very large repos may fail to map. With billing or credits active, follow the comments in `render.yaml`: switch `plan` to `starter` and uncomment the disk and `WORK_DIR`, so the service stays awake and keeps its clones.
@@ -53,7 +53,7 @@ The free plan sleeps after 15 minutes idle (the first request then takes 30-60s)
 1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → this repo.
 2. Framework preset **None**, build command `npm run build`, output directory `out`.
 3. Variables: `NEXT_PUBLIC_API_URL` = your Render URL (no trailing slash), `NODE_VERSION` = `20`.
-4. Deploy. If the `*.pages.dev` URL differs from what you put in `ALLOWED_ORIGINS`, update it on Render.
+4. Deploy.
 
 Models: the server answers with Gemma 4 on Ollama Cloud (`gemma4:31b`, keys at https://ollama.com/settings/keys). Set `LLM_PROVIDER=gemini` to use the Gemini API first with Ollama as fallback (needs `GEMINI_API_KEY`). Override models with `OLLAMA_MODEL` and `GEMMA_MODEL`; `NEXT_PUBLIC_GEMMA_MODEL` sets the label in the UI.
 
