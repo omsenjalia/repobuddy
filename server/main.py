@@ -29,7 +29,8 @@ app = FastAPI(title="RepoBuddy API")
 app.add_middleware(
     CORSMiddleware,
     # Comma-separated list, e.g. "https://repobuddy.pages.dev,http://localhost:3000".
-    allow_origins=os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(","),
+    # Browsers send origins without a trailing slash, so forgive "https://x.pages.dev/ ".
+    allow_origins=[o.strip().rstrip("/") for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")],
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
