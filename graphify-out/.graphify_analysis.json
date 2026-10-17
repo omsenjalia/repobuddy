@@ -1,0 +1,232 @@
+{
+  "communities": {
+    "0": [
+      "tsconfig",
+      "tsconfig_compileroptions",
+      "tsconfig_compileroptions_allowjs",
+      "tsconfig_compileroptions_esmoduleinterop",
+      "tsconfig_compileroptions_incremental",
+      "tsconfig_compileroptions_isolatedmodules",
+      "tsconfig_compileroptions_jsx",
+      "tsconfig_compileroptions_lib",
+      "tsconfig_compileroptions_module",
+      "tsconfig_compileroptions_moduleresolution",
+      "tsconfig_compileroptions_noemit",
+      "tsconfig_compileroptions_paths",
+      "tsconfig_compileroptions_plugins",
+      "tsconfig_compileroptions_resolvejsonmodule",
+      "tsconfig_compileroptions_skiplibcheck",
+      "tsconfig_compileroptions_strict",
+      "tsconfig_compileroptions_target",
+      "tsconfig_exclude",
+      "tsconfig_include"
+    ],
+    "1": [
+      "package",
+      "package_license",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_start",
+      "ref_google_genai",
+      "ref_react_dom",
+      "ref_types_node",
+      "ref_types_react",
+      "ref_types_react_dom",
+      "ref_typescript"
+    ],
+    "2": [
+      "app_page",
+      "app_page_home",
+      "app_page_home_askquestion",
+      "app_page_home_maprepo",
+      "app_page_msg",
+      "app_page_post",
+      "app_page_presets",
+      "ref_react"
+    ],
+    "3": [
+      "lib_repo",
+      "lib_repo_model",
+      "lib_repo_work",
+      "ref_node_child_process",
+      "ref_node_os",
+      "ref_node_util"
+    ],
+    "4": [
+      "app_api_ask_route",
+      "app_api_ask_route_post",
+      "lib_repo_ask",
+      "lib_repo_gemini",
+      "lib_repo_ollama"
+    ],
+    "5": [
+      "app_api_graph_repo_route",
+      "app_api_graph_repo_route_get",
+      "lib_repo_repodir",
+      "ref_node_fs",
+      "ref_node_path"
+    ],
+    "6": [
+      "app_api_map_route",
+      "app_api_map_route_post",
+      "lib_repo_buildgraph",
+      "lib_repo_graphify",
+      "lib_repo_run"
+    ],
+    "7": [
+      "app_globals",
+      "app_layout",
+      "app_layout_metadata",
+      "app_layout_rootlayout",
+      "ref_next"
+    ],
+    "8": [
+      "package_dependencies",
+      "package_dependencies_google_genai",
+      "package_dependencies_next",
+      "package_dependencies_react",
+      "package_dependencies_react_dom"
+    ],
+    "9": [
+      "package_devdependencies",
+      "package_devdependencies_types_node",
+      "package_devdependencies_types_react",
+      "package_devdependencies_types_react_dom",
+      "package_devdependencies_typescript"
+    ]
+  },
+  "cohesion": {
+    "0": 0.10526315789473684,
+    "1": 0.14285714285714285,
+    "2": 0.32142857142857145,
+    "3": 0.3333333333333333,
+    "4": 0.5,
+    "5": 0.5,
+    "6": 0.6,
+    "7": 0.4,
+    "8": 0.4,
+    "9": 0.4
+  },
+  "gods": [
+    {
+      "id": "tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "degree": 16
+    },
+    {
+      "id": "lib_repo_ask",
+      "label": "ask()",
+      "degree": 7
+    },
+    {
+      "id": "lib_repo_buildgraph",
+      "label": "buildGraph()",
+      "degree": 6
+    },
+    {
+      "id": "lib_repo_repodir",
+      "label": "repoDir()",
+      "degree": 5
+    },
+    {
+      "id": "lib_repo_graphify",
+      "label": "graphify()",
+      "degree": 4
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 4
+    },
+    {
+      "id": "app_page_home",
+      "label": "Home()",
+      "degree": 3
+    },
+    {
+      "id": "app_page_post",
+      "label": "post()",
+      "degree": 3
+    },
+    {
+      "id": "lib_repo_run",
+      "label": "run",
+      "degree": 3
+    },
+    {
+      "id": "app_page_home_askquestion",
+      "label": "askQuestion()",
+      "degree": 2
+    }
+  ],
+  "surprises": [
+    {
+      "source": "POST()",
+      "target": "ask()",
+      "source_files": [
+        "app/api/ask/route.ts",
+        "lib/repo.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `POST()` unexpectedly reaches hub `ask()`"
+    },
+    {
+      "source": "GET()",
+      "target": "repoDir()",
+      "source_files": [
+        "app/api/graph/[repo]/route.ts",
+        "lib/repo.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `GET()` unexpectedly reaches hub `repoDir()`"
+    },
+    {
+      "source": "POST()",
+      "target": "buildGraph()",
+      "source_files": [
+        "app/api/map/route.ts",
+        "lib/repo.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `POST()` unexpectedly reaches hub `buildGraph()`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `@google/genai` connect `package.json` to `repo.ts`?",
+      "why": "High betweenness centrality (0.265) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `react-dom`, `@types/node`, `@types/react` to the rest of the system?",
+      "why": "5 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `compilerOptions` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `react` connect `page.tsx` to `package.json`?",
+      "why": "High betweenness centrality (0.123) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `dependencies` connect `dependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.076) - this node is a cross-community bridge."
+    }
+  ]
+}
