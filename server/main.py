@@ -19,6 +19,8 @@ MODEL = os.environ.get("GEMMA_MODEL", "gemma-4-26b-a4b-it")
 # Ollama Cloud fallback when the Gemini API fails. Names come from https://ollama.com/api/tags.
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:31b")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "https://ollama.com")
+# "ollama" (default): Ollama Cloud only. "gemini": Gemini API first, Ollama Cloud as fallback.
+PROVIDER = os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
 # WORK_DIR is a persistent disk in production so clones survive restarts.
 # shortcut: nothing evicts old clones; add LRU cleanup when the disk nears full.
 WORK = Path(os.environ.get("WORK_DIR") or tempfile.gettempdir()) / "repobuddy"
@@ -176,6 +178,11 @@ If the graph doesn't contain the answer, say so.
 </relevant_subgraph>
 
 Question: {body.question}"""
+    if PROVIDER != "gemini":
+        try:
+            return {"answer": await ollama(prompt), "model": f"{OLLAMA_MODEL} (Ollama Cloud)"}
+        except Exception as e:
+            raise HTTPException(502, f"Ollama: {e}")
     try:
         return {"answer": await gemini(prompt), "model": MODEL}
     except Exception as e:

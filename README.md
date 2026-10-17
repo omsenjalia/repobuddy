@@ -55,7 +55,7 @@ The free plan sleeps after 15 minutes idle (the first request then takes 30-60s)
 3. Variables: `NEXT_PUBLIC_API_URL` = your Render URL (no trailing slash), `NODE_VERSION` = `20`.
 4. Deploy. If the `*.pages.dev` URL differs from what you put in `ALLOWED_ORIGINS`, update it on Render.
 
-Fallback: if the Gemini call fails, RepoBuddy asks Gemma 4 on Ollama Cloud (keys at https://ollama.com/settings/keys). Override with `OLLAMA_MODEL` (default `gemma4:31b`). Optional: `GEMMA_MODEL` and `NEXT_PUBLIC_GEMMA_MODEL` (label in the UI).
+Models: the server answers with Gemma 4 on Ollama Cloud (`gemma4:31b`, keys at https://ollama.com/settings/keys). Set `LLM_PROVIDER=gemini` to use the Gemini API first with Ollama as fallback (needs `GEMINI_API_KEY`). Override models with `OLLAMA_MODEL` and `GEMMA_MODEL`; `NEXT_PUBLIC_GEMMA_MODEL` sets the label in the UI.
 
 ## Graphify Cloud mode
 The beta backend, kept for when you don't run the server.
