@@ -10,10 +10,24 @@ const STAGES = ["Cloning repository", "Parsing code with tree-sitter", "Clusteri
 
 type Msg = { role: "user" | "assistant"; text: string; model?: string; error?: boolean };
 
-async function post(url: string, body: object) {
-  const res = await fetch(url, { method: "POST", body: JSON.stringify(body) });
-  const data = await res.json().catch(() => ({ error: `Request failed (${res.status})` }));
-  if (!res.ok) throw new Error(data.error);
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
+class ApiError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+  }
+}
+
+async function post(path: string, body: object) {
+  const res = await fetch(`${API}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  }).catch(() => {
+    throw new ApiError("Can't reach the RepoBuddy API. Try again in a minute.", 0);
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(data.detail ?? `Request failed (${res.status})`, res.status);
   return data;
 }
 
@@ -59,6 +73,7 @@ export default function Workspace() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [recent, setRecent] = useState<string[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
+  const mappedUrl = useRef("");
 
   useEffect(() => {
     setRecent(loadRecent());
@@ -71,7 +86,7 @@ export default function Workspace() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, thinking]);
 
-  // shortcut: stages advance on a timer since /api/map doesn't stream progress; upgrade to SSE if users need real progress.
+  // shortcut: stages advance on a timer since the API doesn't stream progress; upgrade to SSE if users need real progress.
   useEffect(() => {
     if (!mapping) return;
     setStage(0);
@@ -86,7 +101,8 @@ export default function Workspace() {
     setMapping(true);
     setError("");
     try {
-      const { repo } = await post("/api/map", { url: clean });
+      const { repo } = await post("/map", { url: clean });
+      mappedUrl.current = clean;
       setRepo(repo);
       setMessages([]);
       const next = [clean, ...loadRecent().filter((r) => r !== clean)].slice(0, 6);
@@ -105,7 +121,13 @@ export default function Workspace() {
     setMessages((m) => [...m, { role: "user", text: q }]);
     setThinking(true);
     try {
-      const { answer, model } = await post("/api/ask", { repo, question: q });
+      const ask = () => post("/ask", { repo, question: q });
+      // The free API host wipes its disk when it sleeps; rebuild the graph once and retry.
+      const { answer, model } = await ask().catch(async (err) => {
+        if (!(err instanceof ApiError && err.status === 404 && mappedUrl.current)) throw err;
+        await post("/map", { url: mappedUrl.current });
+        return ask();
+      });
       setMessages((m) => [...m, { role: "assistant", text: answer, model }]);
     } catch (err) {
       setMessages((m) => [...m, { role: "assistant", text: (err as Error).message, error: true }]);
@@ -167,9 +189,9 @@ export default function Workspace() {
           <section className="panel" aria-labelledby="graph-h">
             <div className="panel-head">
               <h2 id="graph-h">Knowledge graph</h2>
-              <a className="link" href={`/api/graph/${repo}`} target="_blank" rel="noreferrer">Open full screen ↗</a>
+              <a className="link" href={`${API}/graph/${repo}`} target="_blank" rel="noreferrer">Open full screen ↗</a>
             </div>
-            <iframe src={`/api/graph/${repo}`} title={`Knowledge graph of ${repo}`} />
+            <iframe src={`${API}/graph/${repo}`} title={`Knowledge graph of ${repo}`} />
           </section>
 
           <section className="panel chat" aria-labelledby="chat-h">

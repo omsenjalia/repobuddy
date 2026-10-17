@@ -1,12 +1,12 @@
 # Graph Report - repobuddy  (2026-10-17)
 
 ## Corpus Check
-- 19 files · ~4,547 words
+- 20 files · ~4,764 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 3 file(s) not represented in the graph (top: (none) 2, .css 1)
+- Unclassified: 4 file(s) not represented in the graph (top: (none) 2, .ico 1, .css 1)
 
 ## Summary
-- 128 nodes · 160 edges · 11 communities (9 shown, 2 thin omitted)
+- 134 nodes · 167 edges · 12 communities (9 shown, 3 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.95)
 - Token cost: 0 input · 0 output
 
@@ -27,16 +27,17 @@
 - dependencies
 - app/app/page.tsx
 - .claude/CLAUDE.md
+- apple-icon.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `compilerOptions` - 16 edges
 2. `RepoBuddy — Hackathon Plan` - 13 edges
 3. `ask()` - 8 edges
-4. `buildGraph()` - 6 edges
-5. `next` - 6 edges
-6. `Workspace()` - 5 edges
-7. `Home()` - 5 edges
-8. `repoDir()` - 5 edges
+4. `next` - 7 edges
+5. `Workspace()` - 5 edges
+6. `Home()` - 5 edges
+7. `repoDir()` - 5 edges
+8. `build()` - 5 edges
 9. `🧭 RepoBuddy` - 5 edges
 10. `mapRepo()` - 4 edges
 
@@ -55,7 +56,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (11 total, 2 thin omitted)
+## Communities (12 total, 3 thin omitted)
 
 ### Community 0 - "compilerOptions"
 Cohesion: 0.11
@@ -66,12 +67,12 @@ Cohesion: 0.11
 Nodes (18): devDependencies, @types/node, @types/react, @types/react-dom, typescript, license, name, private (+10 more)
 
 ### Community 2 - "app/page.tsx"
-Cohesion: 0.26
-Nodes (11): EXAMPLES, Home(), SectionHead(), SETUP, USES, CopyButton(), GITHUB_URL, PipelineTabs() (+3 more)
+Cohesion: 0.18
+Nodes (11): metadata, EXAMPLES, Home(), SectionHead(), SETUP, USES, CopyButton(), PipelineTabs() (+3 more)
 
 ### Community 3 - "repo.ts"
-Cohesion: 0.16
-Nodes (13): POST(), GET(), POST(), ask(), buildGraph(), gemini(), graphify(), MODEL (+5 more)
+Cohesion: 0.14
+Nodes (15): POST(), GET(), POST(), ask(), build(), buildGraph(), building, gemini() (+7 more)
 
 ### Community 4 - "RepoBuddy — Hackathon Plan"
 Cohesion: 0.13
@@ -82,34 +83,36 @@ Cohesion: 0.33
 Nodes (5): Built with, How it works, License, 🧭 RepoBuddy, Setup
 
 ### Community 7 - "app/layout.tsx"
-Cohesion: 0.15
-Nodes (6): metadata, fira, inter, metadata, GITHUB, next
+Cohesion: 0.29
+Nodes (4): fira, inter, metadata, GITHUB
 
 ### Community 8 - "dependencies"
 Cohesion: 0.40
 Nodes (5): dependencies, @google/genai, next, react, react-dom
 
 ### Community 9 - "app/app/page.tsx"
-Cohesion: 0.29
-Nodes (10): loadRecent(), Msg, post(), PRESETS, Rich(), saveRecent(), STAGES, Workspace() (+2 more)
+Cohesion: 0.23
+Nodes (12): loadRecent(), Msg, post(), PRESETS, Rich(), saveRecent(), STAGES, Workspace() (+4 more)
 
 ## Knowledge Gaps
 - **5 isolated node(s):** `react-dom`, `@types/node`, `@types/react`, `@types/react-dom`, `typescript`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 78 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 82 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `@google/genai` connect `package.json` to `repo.ts`?**
-  _High betweenness centrality (0.282) - this node is a cross-community bridge._
+  _High betweenness centrality (0.289) - this node is a cross-community bridge._
 - **What connects `react-dom`, `@types/node`, `@types/react` to the rest of the system?**
   _5 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `compilerOptions` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
-- **Why does `next` connect `app/layout.tsx` to `package.json`, `app/page.tsx`?**
-  _High betweenness centrality (0.205) - this node is a cross-community bridge._
+- **Why does `next` connect `app/page.tsx` to `package.json`, `apple-icon.tsx`, `app/layout.tsx`?**
+  _High betweenness centrality (0.237) - this node is a cross-community bridge._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `repo.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.14492753623188406 - nodes in this community are weakly interconnected._
 - **Should `RepoBuddy — Hackathon Plan` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

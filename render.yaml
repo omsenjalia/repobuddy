@@ -1,0 +1,20 @@
+# Render blueprint for the RepoBuddy API (the Python half). The website deploys separately to Cloudflare Pages.
+services:
+  - type: web
+    name: repobuddy-api
+    runtime: docker
+    plan: free
+    rootDir: server
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - server/**
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OLLAMA_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
