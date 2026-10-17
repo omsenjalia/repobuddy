@@ -10,9 +10,9 @@ const STAGES = ["Cloning repository", "Parsing code with tree-sitter", "Clusteri
 
 type Msg = { role: "user" | "assistant"; text: string; model?: string; error?: boolean };
 
+// Default ("server"): the FastAPI server in server/ clones and maps any public repo.
 // Beta ("cloud"): Pages Functions on the same origin answer from Graphify Cloud, limited to its indexed repos.
-// Production ("server"): the FastAPI server in server/ clones and maps any public repo.
-const CLOUD = process.env.NEXT_PUBLIC_BACKEND !== "server";
+const CLOUD = process.env.NEXT_PUBLIC_BACKEND === "cloud";
 const API = CLOUD ? "/api" : process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const EXAMPLES = ["pallets/click", "psf/requests", "expressjs/express"];
 

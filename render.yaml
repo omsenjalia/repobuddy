@@ -1,9 +1,10 @@
-# Render blueprint for the RepoBuddy API (the Python half). The website deploys separately to Cloudflare Pages.
+# Render blueprint for the RepoBuddy API (server/). The website deploys separately to Cloudflare Pages.
 services:
   - type: web
     name: repobuddy-api
     runtime: docker
-    plan: free
+    # Starter never sleeps and allows a disk; the free plan works too but sleeps and loses clones.
+    plan: starter
     rootDir: server
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
@@ -11,7 +12,13 @@ services:
     buildFilter:
       paths:
         - server/**
+    disk:
+      name: repos
+      mountPath: /data
+      sizeGB: 5
     envVars:
+      - key: WORK_DIR
+        value: /data
       - key: GEMINI_API_KEY
         sync: false
       - key: OLLAMA_API_KEY

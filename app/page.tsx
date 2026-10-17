@@ -48,7 +48,7 @@ export default function Home() {
             Paste a repo. RepoBuddy maps it into a code knowledge graph, then answers your questions with real file paths.
           </p>
           <RepoForm />
-          {process.env.NEXT_PUBLIC_BACKEND === "server" ? (
+          {process.env.NEXT_PUBLIC_BACKEND !== "cloud" ? (
             <p className="examples">
               Try{" "}
               {EXAMPLES.map((r) => (

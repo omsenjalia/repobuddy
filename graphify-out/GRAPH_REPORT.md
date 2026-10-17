@@ -1,7 +1,7 @@
 # Graph Report - repobuddy  (2026-10-17)
 
 ## Corpus Check
-- 24 files · ~7,429 words
+- 24 files · ~7,536 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 6 file(s) not represented in the graph (top: (none) 4, .ico 1, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `01c9862b`
+- Built from commit: `fb792055`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -79,7 +79,7 @@ Nodes (15): 10. Demo script (60–90 seconds), 11. Submission checklist, 12. Thi
 
 ### Community 5 - "🧭 RepoBuddy"
 Cohesion: 0.25
-Nodes (7): Built with, Deploy the beta (Cloudflare Pages), How it works, License, 🧭 RepoBuddy, Run locally, Switch to server mode (VPS or Render)
+Nodes (7): Built with, Deploy, Graphify Cloud mode, How it works, License, 🧭 RepoBuddy, Run locally
 
 ### Community 7 - "cloud.ts"
 Cohesion: 0.15

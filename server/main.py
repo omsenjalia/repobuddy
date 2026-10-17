@@ -19,7 +19,9 @@ MODEL = os.environ.get("GEMMA_MODEL", "gemma-4-26b-a4b-it")
 # Ollama Cloud fallback when the Gemini API fails. Names come from https://ollama.com/api/tags.
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:31b")
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "https://ollama.com")
-WORK = Path(tempfile.gettempdir()) / "repobuddy"
+# WORK_DIR is a persistent disk in production so clones survive restarts.
+# shortcut: nothing evicts old clones; add LRU cleanup when the disk nears full.
+WORK = Path(os.environ.get("WORK_DIR") or tempfile.gettempdir()) / "repobuddy"
 GITHUB_URL = re.compile(r"^https://github\.com/[\w.-]+/([\w.-]+?)(?:\.git)?/?$")
 REPO_NAME = re.compile(r"^[\w.-]+$")
 
