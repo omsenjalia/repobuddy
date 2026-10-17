@@ -122,7 +122,9 @@ def graph(repo: str):
 
 
 async def gemini(prompt: str) -> str:
-    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    if not os.environ.get("GEMINI_API_KEY"):
+        raise RuntimeError("GEMINI_API_KEY is not set")
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     res = await client.aio.models.generate_content(model=MODEL, contents=prompt)
     if not res.text:
         raise RuntimeError("Empty Gemini response")
@@ -130,10 +132,12 @@ async def gemini(prompt: str) -> str:
 
 
 async def ollama(prompt: str) -> str:
+    if not os.environ.get("OLLAMA_API_KEY"):
+        raise RuntimeError("OLLAMA_API_KEY is not set")
     async with httpx.AsyncClient(timeout=180) as client:
         res = await client.post(
             f"{OLLAMA_HOST}/api/chat",
-            headers={"Authorization": f"Bearer {os.environ.get('OLLAMA_API_KEY', '')}"},
+            headers={"Authorization": f"Bearer {os.environ['OLLAMA_API_KEY']}"},
             json={"model": OLLAMA_MODEL, "messages": [{"role": "user", "content": prompt}], "stream": False},
         )
     if res.is_error:
@@ -178,4 +182,4 @@ Question: {body.question}"""
         try:
             return {"answer": await ollama(prompt), "model": f"{OLLAMA_MODEL} (Ollama Cloud)"}
         except Exception as e2:
-            raise HTTPException(502, str(e2))
+            raise HTTPException(502, f"Both models failed. Gemini: {e}. Ollama: {e2}")
