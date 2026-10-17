@@ -40,7 +40,7 @@ Login, database, deployment, multi-repo, GitHub issues API, streaming responses,
 |---|---|---|
 | App | **Next.js** (App Router) | UI + API routes in one project, no separate backend |
 | LLM | **Gemma 4 via Gemini API** (`@google/genai` SDK) | Required for Gemma track; no GPU needed |
-| LLM fallback | **Ollama** running Gemma 4 locally | Used automatically when the Gemini call fails (Wi-Fi, rate limit) |
+| LLM fallback | **Ollama Cloud** (`gemma4:31b`, needs `OLLAMA_API_KEY`) | Used automatically when the Gemini call fails (Wi-Fi, rate limit) |
 | Code graph | **Graphify OSS** | Required for Graphify track |
 | Clone | `git clone --depth 1` via `child_process.execFile` | No extra dependency |
 

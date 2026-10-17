@@ -10,9 +10,9 @@ const run = promisify(execFile);
 
 // Verify the exact Gemma 4 model ID in Google AI Studio and set GEMMA_MODEL.
 export const MODEL = process.env.GEMMA_MODEL ?? "gemma-4-26b-a4b-it";
-// Local fallback when the Gemini API fails. Check the tag with `ollama list`.
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "gemma4";
-const OLLAMA_HOST = process.env.OLLAMA_HOST ?? "http://localhost:11434";
+// Ollama Cloud fallback when the Gemini API fails. Names come from https://ollama.com/api/tags.
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? "gemma4:31b";
+const OLLAMA_HOST = process.env.OLLAMA_HOST ?? "https://ollama.com";
 const WORK = path.join(tmpdir(), "repobuddy");
 const GITHUB_URL = /^https:\/\/github\.com\/[\w.-]+\/([\w.-]+?)(?:\.git)?\/?$/;
 const REPO_NAME = /^[\w.-]+$/;
@@ -41,7 +41,11 @@ export async function buildGraph(url: string): Promise<string> {
     await mkdir(WORK, { recursive: true });
     await run("git", ["clone", "--depth", "1", url.trim(), dir]);
   }
-  if (!existsSync(path.join(dir, "graphify-out", "graph.json"))) await graphify(dir, "extract");
+  // extract only writes graph.json; cluster-only adds GRAPH_REPORT.md and graph.html.
+  if (!existsSync(path.join(dir, "graphify-out", "GRAPH_REPORT.md"))) {
+    await graphify(dir, "extract", ".", "--code-only");
+    await graphify(dir, "cluster-only", ".");
+  }
   return name;
 }
 
@@ -53,12 +57,13 @@ async function gemini(prompt: string): Promise<string> {
 }
 
 async function ollama(prompt: string): Promise<string> {
-  const res = await fetch(`${OLLAMA_HOST}/api/generate`, {
+  const res = await fetch(`${OLLAMA_HOST}/api/chat`, {
     method: "POST",
-    body: JSON.stringify({ model: OLLAMA_MODEL, prompt, stream: false }),
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.OLLAMA_API_KEY}` },
+    body: JSON.stringify({ model: OLLAMA_MODEL, messages: [{ role: "user", content: prompt }], stream: false }),
   });
   if (!res.ok) throw new Error(`Ollama: ${await res.text()}`);
-  return (await res.json()).response;
+  return (await res.json()).message.content;
 }
 
 export async function ask(name: string, question: string): Promise<{ answer: string; model: string }> {
@@ -82,7 +87,7 @@ Question: ${question}`;
   try {
     return { answer: await gemini(prompt), model: MODEL };
   } catch (e) {
-    console.warn("Gemini failed, falling back to Ollama:", (e as Error).message);
-    return { answer: await ollama(prompt), model: `${OLLAMA_MODEL} (Ollama)` };
+    console.warn("Gemini failed, falling back to Ollama Cloud:", (e as Error).message);
+    return { answer: await ollama(prompt), model: `${OLLAMA_MODEL} (Ollama Cloud)` };
   }
 }
