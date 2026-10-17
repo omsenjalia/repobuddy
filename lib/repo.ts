@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -32,14 +32,31 @@ async function graphify(cwd: string, ...args: string[]): Promise<string> {
   return stdout;
 }
 
-export async function buildGraph(url: string): Promise<string> {
+// Concurrent requests for the same repo share one build instead of racing git clone.
+const building = new Map<string, Promise<string>>();
+
+export function buildGraph(url: string): Promise<string> {
   const match = GITHUB_URL.exec(url.trim());
-  if (!match) throw new Error("Enter a URL like https://github.com/owner/repo");
+  if (!match) return Promise.reject(new Error("Enter a URL like https://github.com/owner/repo"));
   const name = match[1];
+  let job = building.get(name);
+  if (!job) {
+    job = build(url.trim(), name).finally(() => building.delete(name));
+    building.set(name, job);
+  }
+  return job;
+}
+
+async function build(url: string, name: string): Promise<string> {
   const dir = repoDir(name);
   if (!existsSync(dir)) {
     await mkdir(WORK, { recursive: true });
-    await run("git", ["clone", "--depth", "1", url.trim(), dir]);
+    try {
+      await run("git", ["clone", "--depth", "1", url, dir]);
+    } catch (e) {
+      await rm(dir, { recursive: true, force: true }); // don't leave a half clone that blocks retries
+      throw e;
+    }
   }
   // extract only writes graph.json; cluster-only adds GRAPH_REPORT.md and graph.html.
   if (!existsSync(path.join(dir, "graphify-out", "GRAPH_REPORT.md"))) {
@@ -69,7 +86,11 @@ async function ollama(prompt: string): Promise<string> {
 export async function ask(name: string, question: string): Promise<{ answer: string; model: string }> {
   const dir = repoDir(name);
   // graphify query returns a scoped subgraph; the report gives the big picture.
-  const subgraph = await graphify(dir, "query", question);
+  // Exit code 4 means no node matched (broad questions); answer from the report alone.
+  const subgraph = await graphify(dir, "query", question).catch((e) => {
+    if (e.code === 4) return "No nodes matched this question.";
+    throw e;
+  });
   const report = await readFile(path.join(dir, "graphify-out", "GRAPH_REPORT.md"), "utf-8");
   const prompt = `You are RepoBuddy, helping a first-time open-source contributor.
 Answer using ONLY the code knowledge graph below. Always name real file paths.

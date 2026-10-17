@@ -1,7 +1,11 @@
 {
+  "2": "app/page.tsx",
   "3": "repo.ts",
   "4": "RepoBuddy — Hackathon Plan",
   "5": "🧭 RepoBuddy",
   "6": "CLAUDE.md",
-  "10": ".claude/CLAUDE.md"
+  "7": "app/layout.tsx",
+  "9": "app/app/page.tsx",
+  "10": ".claude/CLAUDE.md",
+  "11": "apple-icon.tsx"
 }
